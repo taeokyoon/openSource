@@ -1,0 +1,3 @@
+docker run --name mysql-container --network my-network -e MYSQL_ROOT_PASSWORD=1234 -e MYSQL_DATABASE=studentdb -e MYSQL_USER=testuser -e MYSQL_PASSWORD=1234 -v (절대경로)/init.sql:/docker-entrypoint-initdb.d/init.sql -d mysql:latest
+
+docker run --name python-container --network my-network -e MYSQL_HOST=mysql-container -e MYSQL_DATABASE=studentdb -e MYSQL_USER=testuser -e MYSQL_PASSWORD=1234 (이미지 이름)

@@ -1,0 +1,25 @@
+name: Add Numbers
+
+on: [push]
+
+jobs:
+  add-numbers:
+    runs-on: ubuntu-latest
+
+    env:
+      NUM1: 10  # Workflow 환경 변수 설정
+    
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      
+      - name: Run add_numbers.py with environment variables and secrets
+        env:
+          NUM2: ${{ secrets.NUM2 }}  # Secrets에서 NUM2 가져오기
+        run: |
+          python add_numbers.py 

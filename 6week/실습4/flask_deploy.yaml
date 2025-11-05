@@ -1,0 +1,45 @@
+# MySQL 및 Flask 컨테이너가 포함된 Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask-deploy
+  template:
+    metadata:
+      labels:
+        app: flask-deploy
+    spec:
+      containers:
+      # Flask 컨테이너
+      - name: flask
+        image: minercode/second_network
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5001
+        env:
+        - name: MYSQL_HOST
+          value: "..."
+        - name: MYSQL_USER
+          value: "testuser"
+        - name: MYSQL_PASSWORD
+          value: "testpassword"
+        - name: MYSQL_DATABASE
+          value: "testdb"
+
+---
+# Flask와 MySQL이 함께 사용될 LoadBalancer Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: secondnetworking
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 5001
+    targetPort: 5001
+  selector:
+    app: flask-deploy

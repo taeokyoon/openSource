@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>방명록</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h2>방명록</h2>
+    <form action="/guestbook" method="POST">
+        <label for="message">메시지 작성:</label>
+        <textarea id="message" name="message" required></textarea><br><br>
+
+        <input type="submit" value="방명록 작성">
+    </form>
+    <br>
+    <h3>방명록 목록</h3>
+    <ul>
+        {% for entry in entries %}
+            <li><strong>{{ entry[0] }}:</strong> {{ entry[1] }}</li>
+        {% endfor %}
+    </ul>
+    <br>
+    <a href="/logout">로그아웃</a>
+</body>
+</html>
+

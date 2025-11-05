@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>방명록</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin: 20px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: darkred;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>방명록</h1>
+
+        <form action="/" method="POST">
+            <label for="name">이름:</label>
+            <input type="text" id="name" name="name" required><br><br>
+
+            <label for="message">메시지:</label>
+            <textarea id="message" name="message" required></textarea><br><br>
+
+            <button type="submit">방명록 작성버튼</button>
+        </form>
+
+        <h2>최근의 방명록</h2>
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+
+        <!-- 애플리케이션 강제 종료 버튼 -->
+        <form action="/error" method="POST" style="margin-top: 20px;">
+            <button type="submit">애플리케이션 종료</button>
+        </form>
+    </div>
+</body>
+</html>

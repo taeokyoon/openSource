@@ -1,0 +1,41 @@
+#version: '3'
+services:
+  db:
+    image: mysql:latest
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: testpassword
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - my-network
+
+  flask-app:
+    build: .
+    container_name: flask-app
+    environment:
+      FLASK_PORT: 5001
+      MYSQL_HOST: db
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: testpassword
+      MYSQL_DATABASE: testdb
+    # env_file:
+    #   - ./flask.env
+    volumes:
+      - ./guestbook_entries:/app/guestbook_entries
+    ports:
+      - "5001:5001"
+    depends_on:
+      - db
+    networks:
+      - my-network
+
+networks:
+  my-network:
+
+volumes:
+  mysql-data:
