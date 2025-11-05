@@ -1,0 +1,89 @@
+# MySQL 및 Flask 컨테이너가 포함된 Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: networking-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: networking
+  template:
+    metadata:
+      labels:
+        app: networking
+    spec:
+      containers:
+      # MySQL 컨테이너
+      - name: mysql
+        image: mysql:latest
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "rootpassword"
+        - name: MYSQL_DATABASE
+          value: "testdb"
+        - name: MYSQL_USER
+          value: "testuser"
+        - name: MYSQL_PASSWORD
+          value: "testpassword"
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+        - name: mysql-initdb
+          mountPath: /docker-entrypoint-initdb.d
+      
+      # Flask 컨테이너
+      - name: flask
+        image: minercode/first_network # 미리 빌드한 Flask 이미지 사용
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5001
+        env:
+        - name: MYSQL_HOST
+          value: "localhost" # 같은 Pod 내에서 MySQL에 연결
+        - name: MYSQL_USER
+          value: "testuser"
+        - name: MYSQL_PASSWORD
+          value: "testpassword"
+        - name: MYSQL_DATABASE
+          value: "testdb"
+
+      volumes:
+      - name: mysql-initdb
+        configMap:
+          name: mysql-initdb-config
+
+
+---
+# MySQL 초기화 ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-initdb-config
+data:
+  init.sql: |
+    CREATE DATABASE IF NOT EXISTS testdb;
+    USE testdb;
+
+    CREATE TABLE IF NOT EXISTS users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(50),
+        email VARCHAR(50)
+    );
+
+    INSERT INTO users (username, email) VALUES ('user1', 'user1@example.com');
+    INSERT INTO users (username, email) VALUES ('user2', 'user2@example.com');
+
+---
+# Flask와 MySQL이 함께 사용될 LoadBalancer Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: firstnetworking
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 5001
+    targetPort: 5001
+  selector:
+    app: networking

@@ -1,0 +1,14 @@
+name: Print_info
+on: [push, workflow_dispatch]
+jobs:
+  cond:
+     runs-on: ubuntu-latest
+     steps:
+      - name: Conditional
+        if: ${{github.event_name == 'push' }} 
+        run: echo "This runs on push events only."
+  info:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output Github context
+        run: echo "${{ github.repository }}"

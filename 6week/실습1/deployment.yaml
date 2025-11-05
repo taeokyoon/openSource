@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test1 # Deployment name
+spec:
+  replicas: 1 # Scaling
+  selector:
+    matchLabels:
+      app: test1-app # (key - value 값으로 자유롭게 지정)
+  template:
+    metadata:
+      labels:
+        app: test1-app
+    spec: # information about pods
+      containers:
+        - name: test1-node # naming container (Up to you)
+          image: minercode/test1:2
+        # for multiple containers...
+        # - name: ...
+        #   image: ...

@@ -1,0 +1,17 @@
+CREATE DATABASE IF NOT EXISTS studentdb;
+
+USE studentdb;
+
+CREATE TABLE IF NOT EXISTS students (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    age INT NOT NULL
+);
+
+INSERT INTO students (name, age) VALUES ('Alice', 21);
+
+CREATE USER IF NOT EXISTS 'testuser'@'%' IDENTIFIED BY '1234';
+
+GRANT ALL PRIVILEGES ON studentdb.* TO 'testuser'@'%';
+FLUSH PRIVILEGES;
+

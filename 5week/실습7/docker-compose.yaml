@@ -1,0 +1,25 @@
+services:
+  writer:
+    build:
+      context: ./writer          # 이 폴더의 Dockerfile로 빌드
+    container_name: writer
+    volumes:
+      - shared-data:/data        # 둘이 공유할 볼륨
+    environment:
+      MSG_INTERVAL: "2"          # (선택) 메시지 주기(초)
+    # 필요 시 로그만 보고 끝낼 거면 restart 정책 안 써도 됨
+    restart: unless-stopped
+
+  reader:
+    build:
+      context: ./reader
+    container_name: reader
+    volumes:
+      - shared-data:/data        # writer와 같은 볼륨
+    depends_on:
+      - writer
+    restart: unless-stopped
+
+volumes:
+  shared-data:
+    # named volume (도커가 관리)

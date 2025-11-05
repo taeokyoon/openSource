@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: guestbook
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: guestbook
+  template:
+    metadata:
+      labels:
+        app: guestbook
+    spec:
+      containers:
+        - name: flask-guestbook
+          image: minercode/guestbook-app # 실제 Docker 이미지를 지정
+          env:
+            - name: TXT_FOLDER
+              value: '/app/data/story.txt'
+          imagePullPolicy : Always
+          volumeMounts:
+            - name: guestbook-volume
+              mountPath: /app/data # 방명록 파일이 저장될 경로
+      volumes:
+        - name: guestbook-volume
+          emptyDir: {} # 임시 볼륨, Pod 삭제 시 볼륨도 삭제됨
+        - name: guestbook-host
+          hostPath:
+            path: /data # Up to you
+            type: DirectoryOrCreate # 디렉토리가 없으면 생성
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: guestbook-service
+spec:
+  selector:
+    app: guestbook
+  ports:
+    - protocol: TCP
+      port: 5001
+      targetPort: 5001
+  type: LoadBalancer

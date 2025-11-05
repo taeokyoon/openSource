@@ -1,0 +1,14 @@
+name: First #Define Workflow name
+on: workflow_dispatch # Define events
+jobs:
+  first-job: # job name, up to you
+    runs-on: ubuntu-latest # key name, setting environment
+    steps: # Describe Steps
+      - name: Print greeting
+        run: echo "Hello World!"
+      - name: Multiple Lines
+        run: |
+          echo "Line1"
+          echo "Line2"
+      - name: Print goodbye
+        run: echo "Goodbye!"
