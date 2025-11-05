@@ -13,6 +13,7 @@ jobs:
           python-version: '3.x'  # Specify your desired Python version here
 
       - name: Run unit tests
+        working-directory: ./prac
         run: |
           python -m unittest discover -s . -p "test_*.py"
 
@@ -29,4 +30,5 @@ jobs:
           python-version: '3.x'
 
       - name: Run main.py
+        working-directory: ./prac
         run: python main.py
