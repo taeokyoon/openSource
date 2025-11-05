@@ -1,14 +1,17 @@
-name: First #Define Workflow name
-on: workflow_dispatch # Define events
+name: Python-Test
+on: push
 jobs:
-  first-job: # job name, up to you
-    runs-on: ubuntu-latest # key name, setting environment
-    steps: # Describe Steps
-      - name: Print greeting
-        run: echo "Hello World!"
-      - name: Multiple Lines
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'  # Specify your desired Python version here
+
+      - name: Run unit tests
         run: |
-          echo "Line1"
-          echo "Line2"
-      - name: Print goodbye
-        run: echo "Goodbye!"
+          python -m unittest discover -s . -p "test_*.py"
